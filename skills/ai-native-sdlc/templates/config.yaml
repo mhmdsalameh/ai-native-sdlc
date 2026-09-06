@@ -8,7 +8,9 @@ protected_paths:
   - migrations/
   - .github/workflows/
 
-# Bug-fix mode: block edits to test files so the agent can't rewrite the test to pass.
+# Bug-fix protection: while a bug-fix session is DECLARED - a `.sdlc/BUGFIX` marker file exists, or
+# the SDLC_BUGFIX env var is set - block edits to test files so the code is fixed, not the test.
+# With no marker, normal test authoring (Build/Test) is allowed. Set false to disable entirely.
 protect_tests_when_fixing: true
 test_path_fragments: [test, spec, __tests__]
 

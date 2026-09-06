@@ -65,13 +65,19 @@ try {
             }
         }
 
-        if (($lines | Where-Object { $_ -match '^\s*protect_tests_when_fixing:\s*true\s*$' }).Count -gt 0) {
+        # Test protection applies to a BUG-FIX session only. A PreToolUse hook cannot detect the
+        # session's intent, so it fires only when a fix is explicitly DECLARED: a .sdlc/BUGFIX
+        # marker file in the repo root, or the SDLC_BUGFIX environment variable. With no marker,
+        # normal test authoring (Build/Test stages) is allowed.
+        $wantProtect = ($lines | Where-Object { $_ -match '^\s*protect_tests_when_fixing:\s*true\s*$' }).Count -gt 0
+        $fixing = $wantProtect -and ((Test-Path (Join-Path $root '.sdlc/BUGFIX')) -or $env:SDLC_BUGFIX)
+        if ($fixing) {
             $tfLine = $lines | Where-Object { $_ -match '^\s*test_path_fragments:\s*\[(.+)\]' } | Select-Object -First 1
             if ($tfLine -and $tfLine -match '\[(.+)\]') {
                 foreach ($t in ($matches[1] -split ',')) {
                     $t = $t.Trim().Trim('"',"'")
                     if ($t -and $rel -match [regex]::Escape($t)) {
-                        Block "SDLC guard: '$rel' looks like a test file (matches '$t'). In bug-fix mode tests are protected so the agent can't edit them to pass. Write the failing test in the Build stage, then fix the code."
+                        Block "SDLC guard: '$rel' is a test file (matches '$t') and this repo is in a DECLARED bug-fix session (.sdlc/BUGFIX present or SDLC_BUGFIX set). Tests are frozen during a fix so the code is fixed, not the test. Finish the fix and remove the marker. If you are authoring/updating tests (Build/Test), clear the fix marker first."
                     }
                 }
             }
