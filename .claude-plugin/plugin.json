@@ -1,0 +1,8 @@
+{
+  "name": "ai-native-sdlc",
+  "version": "1.0.0",
+  "description": "A governed, closed-loop AI-native software development lifecycle for Claude Code: six stages (Plan, Design, Build, Test, Deploy, Maintain), an orchestrator plus per-stage agents, deterministic guardrail hooks, artifact templates, and a security gate. Turns ad-hoc AI coding into a reviewable, auditable system.",
+  "author": { "name": "@mhmdsalameh" },
+  "keywords": ["sdlc", "workflow", "agents", "hooks", "governance", "security-gate", "devops"],
+  "license": "MIT"
+}

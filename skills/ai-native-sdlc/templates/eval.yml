@@ -1,0 +1,21 @@
+# Stage 4 (Test). Continuous evals — regression-test agent config when models/prompts/skills change.
+# Collect 20-50 real tasks with expected outcomes; gate config merges on pass rate.
+# Evals live in version control as evals/*.json (one prompt + acceptance checks each; see
+# eval-example.json). Acceptance checks: tests pass, lint clean, behavior unchanged, policy honored.
+name: sdlc-evals
+on:
+  pull_request:
+    paths:
+      - '.claude/**'
+      - 'CLAUDE.md'
+      - '.sdlc/**'
+  schedule:
+    - cron: '0 6 * * 1'   # weekly baseline
+jobs:
+  evals:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # - run: <your eval runner>   # each task = prompt + acceptance checks
+      # Gate: fail the job if pass-rate < threshold.
+      # Add every production incident as a permanent eval so its class can't regress.

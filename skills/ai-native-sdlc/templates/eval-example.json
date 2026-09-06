@@ -1,0 +1,12 @@
+{
+  "id": "claims-status-happy-path",
+  "source": "task",
+  "added": "2026-06-02",
+  "prompt": "Implement the claims status endpoint per spec.md and make claims-api/tests/test_status.py pass.",
+  "acceptance": [
+    "tests pass: pytest claims-api/tests/test_status.py",
+    "lint clean: make lint",
+    "behavior unchanged: full suite green",
+    "policy honored: no field tagged pii appears in logs (secure-api-review)"
+  ]
+}

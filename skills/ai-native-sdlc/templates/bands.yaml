@@ -1,0 +1,19 @@
+# Stage 6 (Maintain). Control-band monitoring - version-controlled response tiers.
+# A DETERMINISTIC, unit-tested detection script (no model) queries the metrics store
+# (Prometheus, CI API, ...) over a rolling window using Western Electric rules, and invokes
+# Claude only at 2sigma and above. Claude never computes the band itself.
+metrics:
+  - metric: ci_test_failure_rate
+    source: <metrics-store query - Prometheus / CI API / log>
+    baseline: rolling_30d
+    rules: western_electric
+    tiers:
+      1sigma: { action: log }                                            # record only
+      2sigma: { action: diagnose, tools: "Read,Grep,Bash(gh run view *)" } # read-only diagnosis
+      3sigma: { action: propose, routes: [pull_request, runbook:rollback-deploy] } # PR or pre-approved runbook
+
+# On a 3sigma breach Claude writes findings as intent.md (anomaly, evidence, proposed outcome,
+# affected systems, open questions) - re-entering Stage 1 - and an eval is added per incident.
+# Dismissals tune the thresholds to reduce noise. Claude runs stateless and sandboxed.
+intent_on_breach: true
+add_eval_per_incident: true

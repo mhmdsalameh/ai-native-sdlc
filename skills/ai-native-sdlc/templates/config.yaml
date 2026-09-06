@@ -1,0 +1,25 @@
+# .sdlc/config.yaml — per-repo AI-native SDLC settings.
+# Read by ~/.claude/hooks/sdlc-guard.ps1 to enforce the gates. Keep the key names below.
+stages: [plan, design, build, test, deploy, maintain]
+
+# PreToolUse guard blocks Edit/Write to any path CONTAINING one of these fragments.
+protected_paths:
+  - .sdlc/
+  - migrations/
+  - .github/workflows/
+
+# Bug-fix mode: block edits to test files so the agent can't rewrite the test to pass.
+protect_tests_when_fixing: true
+test_path_fragments: [test, spec, __tests__]
+
+# PreToolUse guard blocks Bash commands MATCHING these regexes until a named release
+# authorization is present. Authorize by prefixing the command with SDLC_RELEASE_AUTH=<ticket>.
+prod_gate_command_patterns:
+  - "deploy .*prod"
+  - "kubectl .*production"
+  - "terraform apply"
+
+autonomy:
+  development: free       # agent may deploy
+  staging: moderate       # agent may deploy with logged approval
+  production: gate_only    # agent stops at the gate
