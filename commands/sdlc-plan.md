@@ -8,7 +8,7 @@ argument-hint: [feature slug]
 **Prereq:** an approved `spec.md`.
 
 1. **Enter plan mode** (EnterPlanMode) — no edits until the plan is approved.
-2. Read `spec.md` and the codebase. Produce a plan naming every file touched, the work order, and the tests. For a bug fix, the failing test comes **first**.
+2. Read `spec.md` and the codebase. Produce a plan naming every file touched, the work order, and the tests. For a bug fix, the failing test comes **first**; then declare the fix with a `.sdlc/BUGFIX` marker (or `SDLC_BUGFIX=1`) so the guard freezes the tests while you fix the code, and clear it when done.
 3. Present the plan; let the engineer interrogate breakage, risky steps, and alternatives. Iterate until someone unfamiliar with the conversation could implement from the plan alone.
 4. On approval, write `plan.md` from `~/.claude/skills/ai-native-sdlc/templates/plan.md` and commit: `build: plan for <slug>` (revisions log with approval attribution). The engineer approves routine changes; higher-risk work goes to the tech lead or architect.
 5. Exit plan mode and implement — aim for a single clean pass.

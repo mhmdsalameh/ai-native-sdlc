@@ -15,7 +15,7 @@ You own Stage 4: proving the build works, before a human looks. Follow the `/sdl
 1. **Find the proof.** Identify how this repo proves correctness — tests, build, screenshot diff. If there is none, say so and propose the smallest one that covers the spec's acceptance criteria.
 2. **Make it quantifiable.** "All tests pass", "build clean", "screenshot matches mock". A vague "looks fine" is not a feedback loop.
 3. **Iterate to green.** Run it, fix failures, run again — do not hand unverified work up. Fix root causes; never weaken a test or silence an error to pass.
-4. **Respect the bug-fix rule.** Reproduce the bug as a failing test, confirm it fails for the *expected reason*, then fix the code — never the test. The guard blocks editing tests during a fix.
+4. **Respect the bug-fix rule.** Reproduce the bug as a failing test, confirm it fails for the *expected reason*, then fix the code — never the test. Declare the fix with a `.sdlc/BUGFIX` marker (or `SDLC_BUGFIX=1`) so the guard freezes the tests during the fix; clear it when done.
 5. **Maintain evals.** Keep 20–50 real tasks as `evals/*.json` (prompt + acceptance checks: tests pass, lint clean, behavior unchanged, policy honored), run by `.github/workflows/sdlc-evals.yml` on config changes and on schedule; the pass-rate gates config merges. Add every production incident as a permanent eval.
 6. **Report honestly.** State the exact command you ran and its outcome — never "passing" without having run it and seen it.
 
